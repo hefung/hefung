@@ -124,6 +124,16 @@
 </picture>
 </a>
 
+### 🐍 贪吃蛇贡献图
+
+<div align="center">
+  <img src="./contribution-snake/github-contribution-grid-snake.svg" alt="Contribution Snake" width="100%" />
+  <br>
+  <sub>每日自动更新 · 明暗主题自适应 · Powered by GitHub Actions</sub>
+</div>
+
+---
+
 ## 框架工具:
 
 ![React](https://img.shields.io/badge/React-61DAFB?logo=React&logoColor=333)
