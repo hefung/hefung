@@ -8,6 +8,13 @@
   </a>
 </p>
 
+### 📖 中文
+
+<details>
+<summary><strong>👋 你好，我是 Mr.HeFung！</strong></summary>
+
+
+
 - 👨🏻‍💻 专注于前端开发的 Web 开发工程师
 - 💻 毕业于计算机专业的业余选手
 - 🪐 Self-hosting 爱好者
@@ -144,3 +151,7 @@
 ![Git](https://img.shields.io/badge/Git-F05032?logo=Git&logoColor=fff)
 ![Visual Studio Code](https://img.shields.io/badge/VS%20CODE-007ACC?logo=VisualStudioCode&logoColor=fff)
 ![profile](./profile-3d-contrib/profile-green-animate.svg)
+
+</details>
+
+---
