@@ -5,8 +5,8 @@ permissions:
 
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: '0 0 * * *' # 需要每日自动运行就取消注释
+  schedule:
+    - cron: '0 0 * * *' # 需要每日自动运行就取消注释
 
 jobs:
   generate:
