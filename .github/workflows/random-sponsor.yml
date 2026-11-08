@@ -1,4 +1,4 @@
-name: 随机生成赞助数据提交mate分支
+name: 随机生成赞助数据提交main分支
 on:
   workflow_dispatch:
   # schedule:
@@ -11,7 +11,7 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v4
         with:
-          ref: mate
+          ref: main
           fetch-depth: 0
 
       - name: Setup Node
@@ -131,10 +131,10 @@ jobs:
           require("fs").writeFileSync("./sponsors-random.json", JSON.stringify(result, null, 2), "utf8");
           '
 
-      - name: Commit & Push to mate
+      - name: Commit & Push to main
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add sponsors-random.json
           git commit -m "🤖 自动生成25条随机赞助数据 | 全名/隐藏1字/隐藏2字" || echo "无改动跳过提交"
-          git push origin mate
+          git push origin main
