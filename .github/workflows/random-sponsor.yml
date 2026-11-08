@@ -8,11 +8,12 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
-      - name: 检出代码
+      - name: 检出main分支代码
         uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
+          persist-credentials: true
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -129,12 +130,18 @@ jobs:
           }
 
           require("fs").writeFileSync("./sponsors-random.json", JSON.stringify(result, null, 2), "utf8");
+          console.log("✅ 文件生成完成");
           '
+
+      - name: 打印文件，调试看是否生成成功
+        run: |
+          ls -la
+          cat sponsors-random.json
 
       - name: Commit & Push to main
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add sponsors-random.json
-          git commit -m "🤖 自动生成25条随机赞助数据 | 全名/隐藏1字/隐藏2字" || echo "无改动跳过提交"
+          git commit -m "🤖 自动生成25条随机赞助数据 | 全名/隐藏1字/隐藏2字" || echo "⚠️ 无变更，跳过提交"
           git push origin main
