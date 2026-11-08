@@ -1,8 +1,12 @@
 name: 随机生成赞助数据提交main分支
+
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
   # schedule:
-  #   - cron: '0 0 * * *' # 需要每日自动运行，取消注释
+  #   - cron: '0 0 * * *' # 需要每日自动运行就取消注释
 
 jobs:
   generate:
@@ -20,128 +24,93 @@ jobs:
         with:
           node-version: 20
 
-      - name: 运行脚本生成25条随机赞助数据
+      - name: 生成25条随机赞助数据（近三个月时间）
         run: |
-          node -e '
-          // 百家姓常用姓氏
+          node << 'EOF'
+          const fs = require('fs')
+
+          // 百家姓
           const surnameList = [
             "赵","钱","孙","李","周","吴","郑","王","冯","陈","褚","卫","蒋","沈","韩","杨","朱","秦","尤","许",
             "何","吕","施","张","孔","曹","严","华","金","魏","陶","姜","戚","谢","邹","喻","柏","水","窦","章",
             "云","苏","潘","葛","奚","范","彭","郎","鲁","韦","昌","马","苗","凤","花","方","俞","任","袁","柳"
-          ];
+          ]
 
-          // 名字常用字
+          // 名字用字
           const charList = [
             "伟","芳","娜","敏","静","丽","强","磊","军","洋","勇","艳","杰","娟","涛","明","华","玲","刚","平",
             "辉","宏","鹏","欣","雨","涵","晨","曦","睿","泽","辰","轩","博","皓","嘉","怡","萱","玥","航","恒"
-          ];
+          ]
 
           // 留言池
           const msgList = [
-            "感谢开源贡献！",
-            "项目很棒！",
-            "支持开源事业",
-            "期待更多实用资源！",
-            "加油！",
-            "感谢整理这些工具资源",
-            "镜像很好用，持续更新！",
-            "资源整理得很用心，多谢分享",
-            "小小支持一下，继续加油",
-            "解决了我很多下载难题",
-            "内容简洁实用，很喜欢这个站点",
-            "随缘支持，期待新工具",
-            "感谢无私整理各类资源",
-            "镜像源很稳定，帮大忙了",
-            "非常棒的个人站点，值得支持",
-            "找了很久的脚本在这里找到了",
-            "站点清爽干净，收藏了",
-            "略表心意，祝更新不断",
-            "镜像加速对我工作帮助很大",
-            "资源分类清晰，查找很方便",
-            "持续关注，感谢分享",
-            "省去大量折腾的时间",
-            "一点心意，多多保重",
-            "良心整理，很难得的站点",
-            "希望镜像可以一直维护下去"
-          ];
+            "感谢开源贡献！","项目很棒！","支持开源事业","期待更多实用资源！","加油！",
+            "感谢整理这些工具资源","镜像很好用，持续更新！","资源整理得很用心，多谢分享","小小支持一下，继续加油",
+            "解决了我很多下载难题","内容简洁实用，很喜欢这个站点","随缘支持，期待新工具","感谢无私整理各类资源",
+            "镜像源很稳定，帮大忙了","非常棒的个人站点，值得支持","找了很久的脚本在这里找到了",
+            "站点清爽干净，收藏了","略表心意，祝更新不断","镜像加速对我工作帮助很大","资源分类清晰，查找很方便",
+            "持续关注，感谢分享","省去大量折腾的时间","一点心意，多多保重","良心整理，很难得的站点","希望镜像可以一直维护下去"
+          ]
 
-          // 金额候选
-          const amountPool = [10,15,18,20,22,25,30,36,40,45,50,55,66,75,80,88,99,100,110,120,130,168,200];
-
-          const startDate = new Date("2024-01-13");
-          const result = [];
+          const amountPool = [10,15,18,20,22,25,30,36,40,45,50,55,66,75,80,88,99,100,110,120,130,168,200]
 
           function randPick(arr) {
-            return arr[Math.floor(Math.random() * arr.length)];
+            return arr[Math.floor(Math.random() * arr.length)]
           }
 
-          // 生成单条姓名，并随机决定显示/隐藏级别
+          // 生成随机姓名，三档脱敏
           function genName() {
-            const surname = randPick(surnameList);
-            const isTwoChar = Math.random() < 0.45; // 45% 两字姓名，55%三字
-
-            let fullName;
+            const surname = randPick(surnameList)
+            const isTwoChar = Math.random() < 0.45
+            let fullName
             if (isTwoChar) {
-              const given = randPick(charList);
-              fullName = surname + given;
+              fullName = surname + randPick(charList)
             } else {
-              const g1 = randPick(charList);
-              const g2 = randPick(charList);
-              fullName = surname + g1 + g2;
+              fullName = surname + randPick(charList) + randPick(charList)
             }
-
-            // 随机脱敏等级
-            const r = Math.random();
-            let level;
-            if (r < 0.40) level = 0;     // 40% 全名
-            else if (r < 0.75) level = 1;// 35% 隐藏1字
-            else level = 2;              // 25% 隐藏2字
-
-            if (level === 0) {
-              return fullName;
+            const r = Math.random()
+            if (r < 0.40) return fullName        // 40% 全名
+            if (r < 0.75) {                      // 35% 隐藏1字
+              return fullName.length === 2 ? surname + "*" : surname + "*" + fullName[2]
             }
-            if (level === 1) {
-              if (fullName.length === 2) {
-                return surname + "*";
-              } else {
-                return surname + "*" + fullName[2];
-              }
-            }
-            if (level === 2) {
-              return surname + "**";
-            }
-            return fullName;
+            return surname + "**"                 // 25% 隐藏2字
           }
 
+          // ✅ 改动点：生成最近90天（三个月内）的随机日期
+          function getRandomRecentDate() {
+            const now = new Date()
+            // 最近90天的时间范围：0~90天前
+            const randomDayOffset = Math.floor(Math.random() * 90)
+            const d = new Date(now.getTime() - randomDayOffset * 86400000)
+            // 格式化为 YYYY-MM-DD
+            return d.toISOString().slice(0, 10)
+          }
+
+          const result = []
           for (let i = 0; i < 25; i++) {
-            const name = genName();
-            const message = randPick(msgList);
-            const amount = randPick(amountPool);
-            const offsetDay = Math.floor(Math.random() * 15);
-            const d = new Date(startDate.getTime() + offsetDay * 86400000);
-            const dateStr = d.toISOString().slice(0, 10);
-
             result.push({
-              name,
-              amount,
-              message,
-              date: dateStr
-            });
+              name: genName(),
+              amount: randPick(amountPool),
+              message: randPick(msgList),
+              date: getRandomRecentDate()
+            })
           }
 
-          require("fs").writeFileSync("./sponsors-random.json", JSON.stringify(result, null, 2), "utf8");
-          console.log("✅ 文件生成完成");
-          '
+          fs.writeFileSync('./sponsors-random.json', JSON.stringify(result, null, 2), 'utf8')
+          console.log(`✅ 已生成${result.length}条赞助数据，时间范围：最近90天`)
+          console.log(`📅 日期范围样例：${result[0].date} ~ ${result[result.length-1].date}`)
+          EOF
 
-      - name: 打印文件，调试看是否生成成功
+      - name: 查看生成结果
         run: |
-          ls -la
-          cat sponsors-random.json
+          ls -la sponsors-random.json
+          echo "--- 文件前5行 ---"
+          head -n 5 sponsors-random.json
 
-      - name: Commit & Push to main
+      - name: 提交到main分支
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add sponsors-random.json
-          git commit -m "🤖 自动生成25条随机赞助数据 | 全名/隐藏1字/隐藏2字" || echo "⚠️ 无变更，跳过提交"
+          git commit -m "🤖 自动更新25条随机赞助数据（近三个月）" || echo "ℹ️ 文件无变化，跳过提交"
           git push origin main
