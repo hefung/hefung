@@ -52,13 +52,3 @@
 ```
 
     
-
----
-
-![](./4-productive-time.svg)
-
-```
-![](https://raw.githubusercontent.com/hefung/hefung/main/profile-summary-card-output/transparent/4-productive-time.svg)
-```
-
-    
