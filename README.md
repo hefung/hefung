@@ -8,7 +8,7 @@
   </a>
 </p>
 <details>
-### 📖 中文
+
 
 <summary><strong>👋 你好，我是 Mr.HeFung！</strong></summary>
 
